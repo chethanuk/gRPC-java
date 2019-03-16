@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package greet;
+
+option java_package = "com.proto.greet";
+
+option java_multiple_files = true;
+
+message Greeting {
+    string first_name = 1;
+    string last_name = 2;
+}
+
+// Define the Request
+message GreetRequest {
+    Greeting greeting = 1;
+}
+
+// Define the Response
+message GreetResponse {
+    string result = 1;
+}
+
+
+// Naming Convention: Add 'Service' in service name
+service GreetService {
+    // Unary Api
+    // Syntax: rpc ServiceName(InputMessage) returns (ResponseMessage) {}
+    rpc Greet(GreetRequest) returns (GreetResponse) {};
+
+}

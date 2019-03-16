@@ -1,0 +1,17 @@
+syntax = 'proto3';
+
+package testy;
+
+// Set package name
+option java_package = "com.proto.testy";
+// Generate multiple java class files
+option java_multiple_files = true;
+
+// Mess
+message TestyMessage {
+
+}
+
+service TestyService {
+
+}
