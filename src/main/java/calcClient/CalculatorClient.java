@@ -40,7 +40,7 @@ public class CalculatorClient {
         // Server Streaming
         System.out.println("Server Streaming: Prime Number");
 
-        Integer number = 23456566;
+        Long number = 2345656655200L;
 
         stub.primeNumberDecomposition(PrimeNumberDecompositionRequest.newBuilder()
                 .setNumber(number)

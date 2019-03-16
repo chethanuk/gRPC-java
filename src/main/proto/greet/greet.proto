@@ -31,6 +31,14 @@ message GreetStreamResponse {
     string result = 1;
 }
 
+message LongGreetRequest {
+    Greeting greeting = 1;
+}
+
+message LongGreetResponse {
+    string result = 1;
+}
+
 // Naming Convention: Add 'Service' in service name
 service GreetService {
     // Unary Api
@@ -41,4 +49,7 @@ service GreetService {
     rpc GreetManyTimes (GreetStreamRequest) returns (stream GreetStreamResponse) {
     };
 
+    // Client Streaming Service
+    rpc LongGreet (stream LongGreetRequest) returns (LongGreetResponse) {
+    };
 }

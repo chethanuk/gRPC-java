@@ -16,3 +16,11 @@ Unary RPC calls are basic Request - Response
 - uses HTTP/2 to enable Streaming
 - When server need to send lot of data, 
 - In proto use stream
+
+## gRPC Streaming Client
+
+- Client Streaming RPC API: Client will **send many messages** to server and will recieve one response from the server at any time
+- client sends a stream of requests to the server instead of a single request
+- Server sends back a single response, typically but not necessarily after it has received all the client’s requests, along with its status details and optional trailing metadata.
+- Example: When Client want to **PUSH** data to server
+- in proto file, add word **stream** along with the Request

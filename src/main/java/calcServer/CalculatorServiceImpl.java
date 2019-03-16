@@ -38,9 +38,9 @@ public class CalculatorServiceImpl extends CalculatorServiceGrpc.CalculatorServi
     public void primeNumberDecomposition(PrimeNumberDecompositionRequest request, StreamObserver<PrimeNumberDecompositionResponse> responseObserver) {
 //        super.primeNumberDecomposition(request, responseObserver);
         // Get the request number
-        Integer number = request.getNumber();
+        Long number = request.getNumber();
 
-        Integer divisor = 2;
+        Long divisor = 2L;
         // Prime Algorithm
         while (number > 1) {
             if (number % divisor == 0) {
