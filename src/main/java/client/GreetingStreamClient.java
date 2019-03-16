@@ -1,8 +1,7 @@
 package client;
 
-import com.proto.greet.GreetRequest;
-import com.proto.greet.GreetResponse;
 import com.proto.greet.GreetServiceGrpc;
+import com.proto.greet.GreetStreamRequest;
 import com.proto.greet.Greeting;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -16,7 +15,7 @@ import io.grpc.ManagedChannelBuilder;
  * 4. Create a Response and get the response from RPC call (endpoint)
  * 5. Print or process the response
  */
-public class GreetingClient {
+public class GreetingStreamClient {
 
     public static void main(String[] args) {
         System.out.println("Hello, gRPC Client");
@@ -28,12 +27,6 @@ public class GreetingClient {
                 .build();
 
         System.out.println("Creating Sync Stub");
-        // Client: Creating Sync Client using Blocking Stub
-        // TestyServiceGrpc.TestyServiceBlockingStub syncClient = TestyServiceGrpc.newBlockingStub(channel);
-
-        // Async Client:
-        // TestyServiceGrpc.TestyServiceFutureStub asyncClient = TestyServiceGrpc.newFutureStub(channel);
-
         /**
          * Steps:
          *
@@ -47,23 +40,35 @@ public class GreetingClient {
         // GreetService sync Client
         GreetServiceGrpc.GreetServiceBlockingStub syncGreetClient = GreetServiceGrpc.newBlockingStub(channel);
 
-        // Create ProtoBuff Greeting Message
-        Greeting greeting = Greeting.newBuilder()
-                .setFirstName("A")
-                .setLastName("B")
+//        // Unary
+//        // Create ProtoBuff Greeting Message
+//        Greeting greeting = Greeting.newBuilder()
+//                .setFirstName("A")
+//                .setLastName("B")
+//                .build();
+//
+//        // Create a Greet Request
+//        GreetRequest greetRequest = GreetRequest.newBuilder()
+//                .setGreeting(greeting)
+//                .build();
+//
+//        // Call the RPC and get back a Response (protoBuffs)
+//        // gRPC: Make it easy just call func with Request
+//        GreetResponse response = syncGreetClient.greet(greetRequest);
+//
+//        // Print Response
+//        System.out.println(response.getResult().toString());
+
+        GreetStreamRequest greetStreamResponse = GreetStreamRequest.newBuilder()
+                .setGreeting(Greeting.newBuilder()
+                        .setFirstName("ABC"))
                 .build();
 
-        // Create a Greet Request
-        GreetRequest greetRequest = GreetRequest.newBuilder()
-                .setGreeting(greeting)
-                .build();
-
-        // Call the RPC and get back a Response (protoBuffs)
-        // gRPC: Make it easy just call func with Request
-        GreetResponse response = syncGreetClient.greet(greetRequest);
-
-        // Print Response
-        System.out.println(response.getResult());
+        // Server Streaming: stream response in a blocking manner
+        syncGreetClient.greetManyTimes(greetStreamResponse)
+                .forEachRemaining(greetStreamResponse1 -> {
+                    System.out.println(greetStreamResponse1.getResult());
+                });
 
         // Shutdown the connection once Api stuff is done and clear the channel
         channel.shutdown();

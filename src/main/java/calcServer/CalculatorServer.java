@@ -1,33 +1,31 @@
-package server;
+package calcServer;
 
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 
 import java.io.IOException;
 
-public class GreetingServer {
+public class CalculatorServer {
+    public static void main(String[] args) throws InterruptedException, IOException {
+        //
 
-    // throws IOException
-    public static void main(String[] args) throws IOException, InterruptedException {
-        System.out.println("Hello gRPC");
-
-        // Server
-        Server server = ServerBuilder.forPort(50051)
-
-                .addService(new GreetServiceImpl())
+        // Create Server
+        Server server = ServerBuilder.forPort(50052)
+                .addService(new CalculatorServiceImpl())
+//                .addService(new Ca)
                 .build();
 
         // start
         server.start();
+        System.out.println("Started");
 
         // Shutdown: Using Runtime shutdown server [Imp: before await Termination]
-        Runtime.getRuntime().addShutdownHook(new Thread( () -> {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             System.out.println("Received Shutdown Request");
             server.shutdown();
             System.out.println("Successfully, Stopped Shutdown the server");
         }));
 
-        // await for Termination of Program
         server.awaitTermination();
     }
 }
