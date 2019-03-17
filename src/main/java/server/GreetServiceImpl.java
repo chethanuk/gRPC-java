@@ -1,6 +1,7 @@
 package server;
 
 import com.proto.greet.*;
+import io.grpc.Context;
 import io.grpc.stub.StreamObserver;
 
 // Greet Service Implimentation
@@ -120,5 +121,44 @@ public class GreetServiceImpl extends GreetServiceGrpc.GreetServiceImplBase {
             }
         };
         return requestStreamObserver;
+    }
+
+    // Greet with Deadline Unary function
+
+    @Override
+    public void greetWithDeadline(GreetWithDeadlineRequest request, StreamObserver<GreetWithDeadlineResponse> responseObserver) {
+
+        // Check if Client has cancelled the request: Context give info on RPC
+
+        Context currentContext = Context.current();
+
+        try {
+            for (int i = 0; i < 3; i++) {
+                if (!currentContext.isCancelled()) {
+                    // Check if context is called
+                    System.out.println("Sleep for 100millis");
+                    Thread.sleep(100);
+                } else {
+                    // Client cancelled hence return(break)
+                    return;
+                }
+
+            }
+
+            System.out.println("Sending response");
+            responseObserver.onNext(
+                    GreetWithDeadlineResponse.newBuilder()
+                            .setResult("Completed: " + request.getGreeting().getFirstName())
+                            .build()
+            );
+
+            responseObserver.onCompleted();
+            System.out.println("Done: Server Complete");
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }

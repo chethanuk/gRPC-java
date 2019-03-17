@@ -1,8 +1,7 @@
 package client;
 
 import com.proto.greet.*;
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
+import io.grpc.*;
 import io.grpc.stub.StreamObserver;
 
 import java.util.Arrays;
@@ -47,7 +46,9 @@ public class GreetingClient {
         // Calling Client Streaming RPC Call
 //        doClientStreamingCall(channel);
 
-        doBiDiStreamingCall(channel);
+//        doBiDiStreamingCall(channel);
+
+        doUnaryWithDeadlineRPCCall(channel);
         // Shutdown the connection once Api stuff is done and clear the channel
         channel.shutdown();
         System.out.println("Shutdown the Channel");
@@ -218,5 +219,70 @@ public class GreetingClient {
             e.printStackTrace();
         }
     }
-}
 
+
+    private void doUnaryWithDeadlineRPCCall(ManagedChannel channel) {
+        // Create blocking stub
+        GreetServiceGrpc.GreetServiceBlockingStub greetServiceBlockingStub = GreetServiceGrpc.newBlockingStub(channel);
+
+        // First Call: 500ms deadling
+        try {
+            System.out.println("Sending a request with deadline 500ms");
+            GreetWithDeadlineResponse greetWithDeadlineResponse =
+                    greetServiceBlockingStub.withDeadline(Deadline.after(1000, TimeUnit.MILLISECONDS)).greetWithDeadline(
+                            GreetWithDeadlineRequest.newBuilder()
+                                    .setGreeting(Greeting.newBuilder().setFirstName("A: Deadline500ms"))
+                                    .build()
+                    );
+
+            System.out.println("Response from Server: " + greetWithDeadlineResponse.getResult());
+        } catch (StatusRuntimeException e) {
+            if (e.getStatus() == Status.DEADLINE_EXCEEDED) {
+                System.out.println("Deadline Exceeded: RPC is slow and Response will not be sent");
+            } else {
+                e.printStackTrace();
+            }
+        }
+
+        // First Call: 300ms deadling
+        try {
+            System.out.println("Sending a request with deadline 2000ms");
+            GreetWithDeadlineResponse greetWithDeadlineResponse =
+                    greetServiceBlockingStub.withDeadlineAfter(2, TimeUnit.SECONDS).greetWithDeadline(
+                            GreetWithDeadlineRequest.newBuilder()
+                                    .setGreeting(Greeting.newBuilder().setFirstName("B: Deadline-2000ms"))
+                                    .build()
+                    );
+
+            System.out.println("Response from Server: " + greetWithDeadlineResponse.getResult());
+        } catch (StatusRuntimeException e) {
+            if (e.getStatus() == Status.DEADLINE_EXCEEDED) {
+                System.out.println("Deadline Exceeded: RPC is slow and Response will not be sent");
+            } else {
+                e.printStackTrace();
+            }
+        }
+
+// First Call: 100ms deadling
+        try {
+            System.out.println("Sending a request with deadline 305ms");
+
+            // Response fail if duration is 304 or less
+            // RPC need 305 secs
+            GreetWithDeadlineResponse greetWithDeadlineResponse =
+                    greetServiceBlockingStub.withDeadline(Deadline.after(304, TimeUnit.MILLISECONDS)).greetWithDeadline(
+                            GreetWithDeadlineRequest.newBuilder()
+                                    .setGreeting(Greeting.newBuilder().setFirstName("C- Deadline:305ms"))
+                                    .build()
+                    );
+
+            System.out.println("Response from Server: " + greetWithDeadlineResponse.getResult());
+        } catch (StatusRuntimeException e) {
+            if (e.getStatus() == Status.DEADLINE_EXCEEDED) {
+                System.out.println("Deadline Exceeded: RPC is slow and Response will not be sent");
+            } else {
+                e.printStackTrace();
+            }
+        }
+    }
+}

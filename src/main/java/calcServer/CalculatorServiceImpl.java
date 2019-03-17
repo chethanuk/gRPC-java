@@ -1,6 +1,7 @@
 package calcServer;
 
 import com.proto.testy.*;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 
 public class CalculatorServiceImpl extends CalculatorServiceGrpc.CalculatorServiceImplBase {
@@ -149,5 +150,31 @@ public class CalculatorServiceImpl extends CalculatorServiceGrpc.CalculatorServi
                 responseObserver.onCompleted();
             }
         };
+    }
+
+    @Override
+    public void squareRoot(SquareRootRequest request, StreamObserver<SquareRootResponse> responseObserver) {
+
+        Integer number = request.getNumber();
+
+        if (number > 0) {
+            // Process the api
+            double numberRoot = Math.sqrt(number);
+
+            responseObserver.onNext(
+                    SquareRootResponse.newBuilder()
+                            .setNumberRoot(numberRoot)
+                            .build()
+            );
+            responseObserver.onCompleted();
+        } else {
+            // Send an Error
+            responseObserver.onError(
+                    Status.INVALID_ARGUMENT
+                            .withDescription("The Number sent is not positive")
+                            .augmentDescription("Square root can't be calc for the number you sent")
+                            .asRuntimeException()
+            );
+        }
     }
 }

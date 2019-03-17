@@ -50,6 +50,14 @@ message findMaxResponse {
     int32 max = 1;
 }
 
+message SquareRootRequest {
+    int32 number = 1;
+}
+
+message SquareRootResponse {
+    double number_root = 1;
+}
+
 // service
 service CalculatorService {
     // Unary
@@ -68,6 +76,9 @@ service CalculatorService {
     };
 
     rpc findMax (stream findMaxRequest) returns (stream findMaxResponse) {
+    };
 
+    // Error Handling: RPC will store exception when number is negative: Will send InvalidArgument Error
+    rpc SquareRoot (SquareRootRequest) returns (SquareRootResponse) {
     };
 }
