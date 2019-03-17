@@ -105,6 +105,20 @@ Unary RPC calls are basic Request - Response
 - [Docs](https://github.com/grpc/grpc-java/blob/master/documentation/server-reflection-tutorial.md)
 - gRPC command line tool (gRPC CLI), which can be used to introspect server protos and send/receive test RPCs
 - Reflection is only supported for proto-based services.
-     
-  
+- To Test Server Reflections: 
+    - Download [Evans gRPC CLI](https://github.com/ktr0731/evans/releases)
+    - Start the server and execute : `./evans --cli -r -p portNum`
+    - Steps: 
+        1. `show package` and select package using `package pkgName`
+        2. `show service` and select service using `service CalculatorService`
+        3. Call the servide using `call serviceName`,  give input and see result
+Example: Example of Simple Unary Sum and Client Streaming    
+![Example](https://i.imgur.com/pR50tsp.png)
+
+
+        
+       
+
+         
+ 
      

@@ -30,6 +30,7 @@ dependencies {
     compile 'io.grpc:grpc-netty-shaded:1.19.0' //shaded: includes SSL libs
     compile 'io.grpc:grpc-protobuf:1.19.0'
     compile 'io.grpc:grpc-stub:1.19.0'
+    compile "io.grpc:grpc-services:1.19.0" // for gRPC Reflection
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

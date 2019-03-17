@@ -2,6 +2,7 @@ package calcServer;
 
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
+import io.grpc.protobuf.services.ProtoReflectionService;
 
 import java.io.IOException;
 
@@ -12,7 +13,7 @@ public class CalculatorServer {
         // Create Server
         Server server = ServerBuilder.forPort(50052)
                 .addService(new CalculatorServiceImpl())
-//                .addService(new Ca)
+                .addService(ProtoReflectionService.newInstance())
                 .build();
 
         // start
