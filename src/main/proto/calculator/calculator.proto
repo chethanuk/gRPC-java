@@ -34,6 +34,14 @@ message PrimeNumberDecompositionResponse {
     int64 prime_factor = 1;
 }
 
+message ComputeAverageRequest {
+    int32 number = 1;
+}
+
+message ComputeAverageResponse {
+    double average = 1;
+}
+
 // service
 service CalculatorService {
     // Unary
@@ -44,5 +52,10 @@ service CalculatorService {
 
     // Stream Server
     // Algo will Send the prime num as soon as it finds.. So, No comprise in speed
-    rpc PrimeNumberDecomposition (PrimeNumberDecompositionRequest) returns (stream PrimeNumberDecompositionResponse);
+    rpc PrimeNumberDecomposition (PrimeNumberDecompositionRequest) returns (stream PrimeNumberDecompositionResponse) {
+    };
+
+    // Compute Avg
+    rpc ComputeAverage (stream ComputeAverageRequest) returns (ComputeAverageResponse) {
+    };
 }

@@ -24,3 +24,9 @@ Unary RPC calls are basic Request - Response
 - Server sends back a single response, typically but not necessarily after it has received all the client’s requests, along with its status details and optional trailing metadata.
 - Example: When Client want to **PUSH** data to server
 - in proto file, add word **stream** along with the Request
+- Imp: Client should be ASYNC stub instead of blocking stub(sync)
+    - Instead of newBlockingStub use `GreetServiceGrpc.newStub`
+    - In Client: Have to handle `StreamObserver`. i.e Handling the response from the server    
+        - onNext: Will be called once since it's client Streaming
+        - Hence, onCompleted will be called just after onNext()
+        - Since, it's aysnc stub: Add a CountDown latch

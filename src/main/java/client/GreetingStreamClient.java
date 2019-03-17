@@ -40,24 +40,6 @@ public class GreetingStreamClient {
         // GreetService sync Client
         GreetServiceGrpc.GreetServiceBlockingStub syncGreetClient = GreetServiceGrpc.newBlockingStub(channel);
 
-//        // Unary
-//        // Create ProtoBuff Greeting Message
-//        Greeting greeting = Greeting.newBuilder()
-//                .setFirstName("A")
-//                .setLastName("B")
-//                .build();
-//
-//        // Create a Greet Request
-//        GreetRequest greetRequest = GreetRequest.newBuilder()
-//                .setGreeting(greeting)
-//                .build();
-//
-//        // Call the RPC and get back a Response (protoBuffs)
-//        // gRPC: Make it easy just call func with Request
-//        GreetResponse response = syncGreetClient.greet(greetRequest);
-//
-//        // Print Response
-//        System.out.println(response.getResult().toString());
 
         GreetStreamRequest greetStreamResponse = GreetStreamRequest.newBuilder()
                 .setGreeting(Greeting.newBuilder()
