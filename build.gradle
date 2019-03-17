@@ -27,7 +27,7 @@ repositories {
 
 dependencies {
     // gRPC Non-Java
-    compile 'io.grpc:grpc-netty-shaded:1.19.0'
+    compile 'io.grpc:grpc-netty-shaded:1.19.0' //shaded: includes SSL libs
     compile 'io.grpc:grpc-protobuf:1.19.0'
     compile 'io.grpc:grpc-stub:1.19.0'
 

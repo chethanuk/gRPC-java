@@ -2,8 +2,12 @@ package client;
 
 import com.proto.greet.*;
 import io.grpc.*;
+import io.grpc.netty.shaded.io.grpc.netty.GrpcSslContexts;
+import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
 import io.grpc.stub.StreamObserver;
 
+import javax.net.ssl.SSLException;
+import java.io.File;
 import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +25,7 @@ public class GreetingClient {
 
     ManagedChannel channel;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SSLException {
         System.out.println("Hello, gRPC Client");
 
         // Creating new Greeting Client Object
@@ -31,14 +35,20 @@ public class GreetingClient {
     }
 
     // Create a Channel and Call the Unary, ServerStreaming,.. and Shutdown the Channel
-    private void run() {
+    private void run() throws SSLException {
         channel = ManagedChannelBuilder.forAddress("localhost", 50051)
-                .usePlaintext() // Not preferred in prod
+//                .usePlaintext() // Not preferred in prod: //UNAVAILABLE: Network closed for unknown reason
                 .build();
+
+        ManagedChannel securedChannel = NettyChannelBuilder.forAddress("localhost", 50052)
+                .sslContext(GrpcSslContexts.forClient().trustManager(new File("./src/ssl/ca.crt")).build())
+                .build();
+
+
         System.out.println("Successfully, Created a Channel");
 
         // Calling Unary RPC Call Funtion
-//        doUnaryRPCCall(channel);
+        doUnaryRPCCall(securedChannel);
 
         // Calling Server Streaming RPC Call
 //        doServerStreamingCall(channel);
@@ -48,7 +58,7 @@ public class GreetingClient {
 
 //        doBiDiStreamingCall(channel);
 
-        doUnaryWithDeadlineRPCCall(channel);
+//        doUnaryWithDeadlineRPCCall(channel);
         // Shutdown the connection once Api stuff is done and clear the channel
         channel.shutdown();
         System.out.println("Shutdown the Channel");
