@@ -95,4 +95,59 @@ public class CalculatorServiceImpl extends CalculatorServiceGrpc.CalculatorServi
         };
         return requestStreamObserver;
     }
+
+    @Override
+    public StreamObserver<findMaxRequest> findMax(StreamObserver<findMaxResponse> responseObserver) {
+
+        return new StreamObserver<findMaxRequest>() {
+            int currentMax = 0;
+
+            @Override
+            public void onNext(findMaxRequest value) {
+                int currentNum = value.getNumber();
+
+                if (currentNum > currentMax) {
+                    currentMax = currentNum;
+
+                    // Return response
+                    responseObserver.onNext(
+                            findMaxResponse.newBuilder()
+                                    .setMax(currentMax)
+                                    .build()
+                    );
+
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    // Do Nothing
+                }
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                System.out.println(t.getMessage());
+
+                // Set Complete
+                responseObserver.onCompleted();
+            }
+
+            @Override
+            public void onCompleted() {
+                // Client Completed Sending data
+
+                // Send the final data
+                System.out.println("Final Max: ");
+                responseObserver.onNext(
+                        findMaxResponse.newBuilder()
+                                .setMax(currentMax)
+                                .build());
+
+                responseObserver.onCompleted();
+            }
+        };
+    }
 }

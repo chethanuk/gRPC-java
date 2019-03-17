@@ -17,7 +17,7 @@ Unary RPC calls are basic Request - Response
 - When server need to send lot of data, 
 - In proto use stream
 
-## gRPC Streaming Client
+### gRPC Streaming Client
 
 - Client Streaming RPC API: Client will **send many messages** to server and will recieve one response from the server at any time
 - client sends a stream of requests to the server instead of a single request
@@ -30,3 +30,17 @@ Unary RPC calls are basic Request - Response
         - onNext: Will be called once since it's client Streaming
         - Hence, onCompleted will be called just after onNext()
         - Since, it's aysnc stub: Add a CountDown latch
+        
+### gRPC Bi-Directional Streaming API
+
+- Client will **send many messages** to the server and will **receive many responses** from the server
+- Number of requests and responses **does not have to match**
+- Best suited when Client and Server need to send lot of data async
+- In proto, use **stream** on both request and response
+
+
+### Error Codes:
+
+- [Main Errors](https://grpc.io/docs/guides/error.html)
+- [A handy guide to gRPC errors](http://avi.im/grpc-errors/) & [Codes](https://github.com/avinassh/grpc-errors)
+- 
